@@ -1,6 +1,9 @@
 import asyncio
 import importlib
+import os
+import threading
 
+from flask import Flask
 from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 
@@ -11,6 +14,19 @@ from AviaxMusic.misc import sudo
 from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
+
+# Flask health-check server (keeps the container/dyno alive)
+flask_app = Flask(__name__)
+
+@flask_app.route("/")
+def health():
+    return "AviaxMusic is running!", 200
+
+def run_flask():
+    port = int(os.environ.get("PORT", 8080))
+    flask_app.run(host="0.0.0.0", port=port)
+
+threading.Thread(target=run_flask, daemon=True).start()
 
 
 async def init():
