@@ -11,4 +11,4 @@ COPY . /app/
 RUN pip install --no-cache-dir -U pip && \
     pip install --no-cache-dir -r requirements.txt
 
-CMD ["bash", "start"]
+CMD ["python3", "-m", "AviaxMusic"]
